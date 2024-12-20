@@ -359,6 +359,9 @@ class AndroidCameraCameraX extends CameraPlatform {
     // resolutionPreset for camera UseCases.
     final ResolutionSelector? presetResolutionSelector =
         _getResolutionSelectorFromPreset(mediaSettings?.resolutionPreset);
+    final ResolutionSelector? previewResolutionSelector =
+        _getResolutionSelectorFromPreset(
+            mediaSettings?.previewResolutionPreset);
     final QualitySelector? presetQualitySelector =
         _getQualitySelectorFromPreset(mediaSettings?.resolutionPreset);
 
@@ -367,7 +370,7 @@ class AndroidCameraCameraX extends CameraPlatform {
     processCameraProvider!.unbindAll();
 
     // Configure Preview instance.
-    preview = proxy.createPreview(presetResolutionSelector,
+    preview = proxy.createPreview(previewResolutionSelector,
         /* use CameraX default target rotation */ null);
     final int flutterSurfaceTextureId =
         await proxy.setPreviewSurfaceProvider(preview!);
@@ -378,7 +381,7 @@ class AndroidCameraCameraX extends CameraPlatform {
 
     // Configure ImageAnalysis instance.
     // Defaults to YUV_420_888 image format.
-    imageAnalysis = proxy.createImageAnalysis(presetResolutionSelector,
+    imageAnalysis = proxy.createImageAnalysis(previewResolutionSelector,
         /* use CameraX default target rotation */ null);
 
     // Configure VideoCapture and Recorder instances.

@@ -291,7 +291,7 @@ class CameraController extends ValueNotifier<CameraValue> {
 
       _cameraId = await CameraPlatform.instance.createCameraWithSettings(
         description,
-        mediaSettings ?? const MediaSettings(),
+        mediaSettings ?? MediaSettings(),
       );
 
       _unawaited(CameraPlatform.instance

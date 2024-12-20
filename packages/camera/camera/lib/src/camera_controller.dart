@@ -240,7 +240,8 @@ class CameraController extends ValueNotifier<CameraValue> {
   /// - [fps] controls rate at which frames should be captured by the camera in frames per second.
   /// - [videoBitrate] controls the video encoding bit rate for recording.
   /// - [audioBitrate] controls the audio encoding bit rate for recording.
-
+  /// - [previewResolutionPreset] controls the quality of camera preview. If not specified,
+  ///   [resolutionPreset] will be used for both preview and capture.
   CameraController(
     CameraDescription description,
     ResolutionPreset resolutionPreset, {
@@ -249,12 +250,14 @@ class CameraController extends ValueNotifier<CameraValue> {
     int? videoBitrate,
     int? audioBitrate,
     this.imageFormatGroup,
+    ResolutionPreset? previewResolutionPreset,
   })  : mediaSettings = MediaSettings(
             resolutionPreset: resolutionPreset,
             enableAudio: enableAudio,
             fps: fps,
             videoBitrate: videoBitrate,
-            audioBitrate: audioBitrate),
+            audioBitrate: audioBitrate,
+            previewResolutionPreset: previewResolutionPreset),
         super(CameraValue.uninitialized(description));
 
   /// The properties of the camera device controlled by this controller.
