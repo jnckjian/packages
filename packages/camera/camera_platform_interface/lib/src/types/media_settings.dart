@@ -6,69 +6,113 @@
 
 import 'resolution_preset.dart';
 
-/// Recording media settings.
-///
-/// Used in [CameraPlatform.createCameraWithSettings].
-/// Allows to tune recorded video parameters, such as resolution, frame rate, bitrate.
-/// If [fps], [videoBitrate] or [audioBitrate] are passed, they must be greater than zero.
+/// The camera settings for preview and recording.
 class MediaSettings {
-  /// Creates a [MediaSettings].
-  const MediaSettings({
+  /// Creates a new instance of [MediaSettings].
+  ///
+  /// - [resolutionPreset] affects the quality of video recording and image capture.
+  /// - [previewResolutionPreset] affects the quality of camera preview. If not specified,
+  ///   it will use [ResolutionPreset.medium].
+  /// - [enableAudio] controls audio presence in recorded video.
+  /// - [fps] controls rate at which frames should be captured by the camera in frames per second.
+  /// - [videoBitrate] controls the video encoding bit rate for recording.
+  /// - [audioBitrate] controls the audio encoding bit rate for recording.
+  MediaSettings({
     this.resolutionPreset,
+    this.previewResolutionPreset,
+    bool enableAudio = true,
     this.fps,
     this.videoBitrate,
     this.audioBitrate,
-    this.enableAudio = false,
   })  : assert(fps == null || fps > 0, 'fps must be null or greater than zero'),
         assert(videoBitrate == null || videoBitrate > 0,
             'videoBitrate must be null or greater than zero'),
         assert(audioBitrate == null || audioBitrate > 0,
-            'audioBitrate must be null or greater than zero');
+            'audioBitrate must be null or greater than zero'),
+        _enableAudio = enableAudio;
 
-  /// [ResolutionPreset] affect the quality of video recording and image capture.
+  /// The resolution preset for video recording and image capture.
   final ResolutionPreset? resolutionPreset;
+
+  /// The resolution preset for camera preview only.
+  /// If not specified, it will use [ResolutionPreset.medium].
+  final ResolutionPreset? previewResolutionPreset;
 
   /// Rate at which frames should be captured by the camera in frames per second.
   final int? fps;
 
-  /// The video encoding bit rate for recording.
+  /// The target video encoding bit rate in bits per second.
   final int? videoBitrate;
 
-  /// The audio encoding bit rate for recording.
+  /// The target audio encoding bit rate in bits per second.
   final int? audioBitrate;
 
-  /// Controls audio presence in recorded video.
-  final bool enableAudio;
+  final bool _enableAudio;
+
+  /// Whether to include audio when recording video.
+  bool get enableAudio => _enableAudio;
+
+  /// Creates a copy of this [MediaSettings] with the given fields replaced with new values.
+  MediaSettings copyWith({
+    ResolutionPreset? resolutionPreset,
+    ResolutionPreset? previewResolutionPreset,
+    bool? enableAudio,
+    int? fps,
+    int? videoBitrate,
+    int? audioBitrate,
+  }) {
+    return MediaSettings(
+      resolutionPreset: resolutionPreset ?? this.resolutionPreset,
+      previewResolutionPreset: previewResolutionPreset ?? this.previewResolutionPreset ?? ResolutionPreset.medium,
+      enableAudio: enableAudio ?? this.enableAudio,
+      fps: fps ?? this.fps,
+      videoBitrate: videoBitrate ?? this.videoBitrate,
+      audioBitrate: audioBitrate ?? this.audioBitrate,
+    );
+  }
+
+  /// Converts the instance to a JSON compatible map.
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'resolutionPreset': resolutionPreset?.toString(),
+        'previewResolutionPreset': previewResolutionPreset?.toString(),
+        'enableAudio': enableAudio,
+        if (fps != null) 'fps': fps,
+        if (videoBitrate != null) 'videoBitrate': videoBitrate,
+        if (audioBitrate != null) 'audioBitrate': audioBitrate,
+      };
 
   @override
   bool operator ==(Object other) {
-    if (identical(other, this)) {
+    if (identical(this, other)) {
       return true;
     }
     if (other.runtimeType != runtimeType) {
       return false;
     }
     return other is MediaSettings &&
-        resolutionPreset == other.resolutionPreset &&
-        fps == other.fps &&
-        videoBitrate == other.videoBitrate &&
-        audioBitrate == other.audioBitrate &&
-        enableAudio == other.enableAudio;
+        other.resolutionPreset == resolutionPreset &&
+        other.previewResolutionPreset == previewResolutionPreset &&
+        other.enableAudio == enableAudio &&
+        other.fps == fps &&
+        other.videoBitrate == videoBitrate &&
+        other.audioBitrate == audioBitrate;
   }
 
   @override
   int get hashCode => Object.hash(
         resolutionPreset,
+        previewResolutionPreset,
+        enableAudio,
         fps,
         videoBitrate,
         audioBitrate,
-        enableAudio,
       );
 
   @override
   String toString() {
     return 'MediaSettings{'
         'resolutionPreset: $resolutionPreset, '
+        'previewResolutionPreset: $previewResolutionPreset, '
         'fps: $fps, '
         'videoBitrate: $videoBitrate, '
         'audioBitrate: $audioBitrate, '
