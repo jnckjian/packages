@@ -5,7 +5,7 @@ description: A Flutter plugin for controlling the camera. Supports previewing
 repository: https://github.com/flutter/packages/tree/main/packages/camera/camera
 issue_tracker: https://github.com/flutter/flutter/issues?q=is%3Aissue+is%3Aopen+label%3A%22p%3A+camera%22
 version: 0.11.0+2
-///随便改改提交
+
 environment:
   sdk: ^3.4.0
   flutter: ">=3.22.0"
